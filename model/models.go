@@ -19,3 +19,9 @@ func GetTodos(db *gorm.DB) ([]Todo, error) {
 	err := db.Find(&todos).Error
 	return todos, err
 }
+
+func GetTodosbyid(db *gorm.DB, id int) (Todo, error) {
+	var todos Todo
+	err := db.First(&todos, id).Error
+	return todos, err
+}

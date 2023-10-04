@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gowithpostgrecrud/database"
 	"gowithpostgrecrud/model"
+	"strconv"
 
 	"net/http"
 
@@ -45,6 +46,22 @@ func main() {
 			return
 		}
 		c.JSON(http.StatusOK, todos)
+	})
+
+	router.GET("/todo/:id", func(c *gin.Context) {
+		todoID := c.Param("id")
+
+		id , err := strconv.Atoi(todoID)
+		if err != nil {
+			c.JSON(http.StatusNotFound,gin.H{"Error": "at time of conversion"})
+			
+		}
+		todo, err := model.GetTodosbyid(db,id)
+		if err!= nil {
+			c.JSON(http.StatusNotFound,gin.H{"Error":"Gettitng the data from model"})
+		}
+		c.JSON(http.StatusOK,todo)
+
 	})
 
 	router.POST("/todo", func(c *gin.Context) {
