@@ -12,7 +12,7 @@ import (
 
 func main() {
 
-	r := gin.Default()
+	router := gin.Default()
 
 	fmt.Println("sohel bole")
 	db, err := database.ConnectionDatabase()
@@ -22,7 +22,32 @@ func main() {
 	fmt.Println("connection build succesfully", db)
 	defer db.Close()
 
-	r.POST("/todo", func(c *gin.Context) {
+	router.POST("/sohel", func(c *gin.Context) {
+		var todo model.Todo
+
+		if err := c.ShouldBindJSON(&todo); err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "not found"})
+			return
+		}
+		if err := model.Createtool(db, &todo); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"Error": "server Error"})
+			return
+		}
+
+		c.JSON(http.StatusOK, todo)
+
+	})
+
+	router.GET("/todo", func(c *gin.Context) {
+		todos, err := model.GetTodos(db)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"Error": "database not found"})
+			return
+		}
+		c.JSON(http.StatusOK, todos)
+	})
+
+	router.POST("/todo", func(c *gin.Context) {
 		var todo model.Todo
 		if err := c.ShouldBindJSON(&todo); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"Error": "Invalid request"})
@@ -34,5 +59,5 @@ func main() {
 		}
 		c.JSON(http.StatusOK, todo)
 	})
-	r.Run(":8080")
+	router.Run(":8080")
 }

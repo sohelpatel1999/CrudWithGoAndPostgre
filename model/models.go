@@ -5,10 +5,17 @@ import (
 )
 
 type Todo struct {
+	Id     int
 	Title  string
 	Status string
 }
 
 func Createtool(db *gorm.DB, todo *Todo) error {
 	return db.Create(todo).Error
+}
+
+func GetTodos(db *gorm.DB) ([]Todo, error) {
+	var todos []Todo
+	err := db.Find(&todos).Error
+	return todos, err
 }
