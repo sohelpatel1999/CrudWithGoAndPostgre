@@ -25,3 +25,11 @@ func GetTodosbyid(db *gorm.DB, id int) (Todo, error) {
 	err := db.First(&todos, id).Error
 	return todos, err
 }
+
+func UpdateTodo(db *gorm.DB, id int, todo *Todo) error {
+	return db.Model(&Todo{}).Where("id = ?", id).Updates(todo).Error
+}
+
+func DeleteTodo(db *gorm.DB, id int) error {
+	return db.Where("id = ?", id).Delete(&Todo{}).Error
+}
