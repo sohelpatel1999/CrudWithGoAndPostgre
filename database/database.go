@@ -9,7 +9,7 @@ import (
 
 func ConnectionDatabase() (*gorm.DB, error) {
 
-	db, err := gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=postgres password=admin sslmode=disable")
+	db, err := gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=sohel password=admin sslmode=disable")
 	if err != nil {
 		fmt.Println("error in db")
 		return nil, err
